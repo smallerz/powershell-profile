@@ -7,6 +7,10 @@ function convertCharToUnicodeCodePoint($char) {
 
 # Convert a single Unicode code point value to its glyph
 function convertUnicodeCodePointToChar($codepoint) {
+  if ($codepoint -like "U+*") {
+    $codepoint = $codepoint.substring(2)
+  }
+
   [Convert]::ToChar([int][Convert]::ToInt32($codepoint, 16))
 }
 
@@ -15,7 +19,8 @@ function getCharUnicodeCategory($char) {
   [System.Globalization.CharUnicodeInfo]::GetUnicodeCategory($char)
 }
 
-# Delete an item. WARNING:
+# Delete an item.
+# WARNING:
 # If the item is a directory, it will delete *everything* inside of it.
 function rimraf($path) {
   remove-item $path -recurse -force
