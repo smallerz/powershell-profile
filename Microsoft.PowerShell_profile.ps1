@@ -1,46 +1,47 @@
-# FUNCTIONS
-
+#region FUNCTIONS
 # Convert a single character to its Unicode code point value
-function convertCharToUnicodeCodePoint($char) {
-  'U+{0:X4}' -f [int][char]$char
+function ConvertTo-CodePoint($char) {
+  'U+{0:X4}' -f [int][char]$char;
 }
 
 # Convert a single Unicode code point value to its glyph
-function convertUnicodeCodePointToChar($codepoint) {
+function ConvertTo-Glyph($codepoint) {
   if ($codepoint -like "U+*") {
-    $codepoint = $codepoint.substring(2)
+    $codepoint = $codepoint.substring(2);
   }
 
-  [Convert]::ToChar([int][Convert]::ToInt32($codepoint, 16))
+  [char][Convert]::ToInt32($codepoint, 16);
 }
 
 # Get the Unicode category for a single character
-function getCharUnicodeCategory($char) {
-  [System.Globalization.CharUnicodeInfo]::GetUnicodeCategory($char)
+function Get-UnicodeCategory($char) {
+  [System.Globalization.CharUnicodeInfo]::GetUnicodeCategory($char);
 }
 
 # Delete an item.
 # WARNING:
 # If the item is a directory, it will delete *everything* inside of it.
-function rimraf($path) {
-  remove-item $path -recurse -force
+function Remove-RecursiveItem($path) {
+  Remove-Item $path -Recurse -Force;
 }
+#endregion
 
-# GLOBAL VARIABLES
+#region GLOBAL VARIABLES
+$global:DefaultUser = [System.Environment]::UserName;
+#endregion
 
-$global:DefaultUser = [System.Environment]::UserName
+#region ALIASES
+Set-Alias codepoint ConvertTo-CodePoint;
+Set-Alias glyph ConvertTo-Glyph;
+Set-Alias rimraf Remove-RecursiveItem;
+Set-Alias ucat Get-UnicodeCategory;
+#endregion
 
-# ALIASES
+#region MODULES
+Import-Module posh-git;
+Import-Module oh-my-posh;
+#endregion
 
-set-alias gyp convertUnicodeCodePointToChar
-set-alias ucp convertCharToUnicodeCodePoint
-set-alias uct getCharUnicodeCategory
-
-# MODULES
-
-import-module posh-git
-import-module oh-my-posh
-
-# THEME
-
-set-theme paradox
+#region THEME
+Set-Theme Paradox;
+#endregion
